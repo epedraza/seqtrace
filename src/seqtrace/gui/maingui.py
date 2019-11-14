@@ -707,7 +707,7 @@ class MainWindow(Gtk.Window, CommonDialogs):
                     seqfname = children[0].getName() + ', ' + children[1].getName()
 
                 if not(include_fnames):
-                    seqfname = ''
+                    seqfname = item.getName()
 
                 sw.addUnalignedSequence(item.getCompactConsSequence(), seqfname, desc)
 

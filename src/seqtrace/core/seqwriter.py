@@ -290,7 +290,7 @@ class SeqWriterFileDialog(Gtk.FileChooserDialog):
         self.fnames_toggle = Gtk.CheckButton(
             "include trace file names in exported file"
         )
-        self.fnames_toggle.set_active(True)
+        self.fnames_toggle.set_active(False)
         self.set_extra_widget(self.fnames_toggle)
         self.fnames_toggle.set_visible(self.show_options)
 
