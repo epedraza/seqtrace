@@ -184,10 +184,9 @@ class ConsensusSequenceViewer(Gtk.DrawingArea, Observable):
         #numbases = len(self.cons.getAlignedSequence(1))
         alend = self.fheight*self.numseqs + self.al_top
         consend = alend + self.padding + self.fheight
-        
+
         # Calculate the index of the base corresponding to the mouse click.
         bindex = int(event.x / self.fwidth)
-
         if event.button == 1:
             if (event.y > self.al_top) and (event.y < alend):
                 # The mouse is over the alignment display.
@@ -195,13 +194,13 @@ class ConsensusSequenceViewer(Gtk.DrawingArea, Observable):
                     seqnum = 1
                 else:
                     seqnum = 0
-    
+
                 seq1index = self.cons.getActualSeqIndex(0, bindex)
                 if self.numseqs == 2:
                     seq2index = self.cons.getActualSeqIndex(1, bindex)
                 else:
                     seq2index = -1
-    
+
                 if (self.highlighted != -1) and (self.highlighted != bindex):
                     # Unhighlight the previously selected alignment position.
                     self.redrawAlignmentPos(self.highlighted)
@@ -261,13 +260,13 @@ class ConsensusSequenceViewer(Gtk.DrawingArea, Observable):
                 s_index = index + 1
 
             self.updateConsSelection(s_index, False)
-            #print 'AFTER start, end, index:', self.consselect_start, self.consselect_end, index 
+            #print 'AFTER start, end, index:', self.consselect_start, self.consselect_end, index
 
         # Check if the mouse pointer is on the alignment display.
         if (event.y > self.al_top) and (event.y < (self.fheight*self.numseqs + self.al_top)):
             # change the cursor, if necessary
             self.setCursor(self.clickable_cursor)
-            
+
             # draw the highlight and erase the old one, if necessary
             if self.lastx != index:
                 if (self.lastx != self.highlighted) or (self.highlighted == -1):
@@ -380,7 +379,6 @@ class ConsensusSequenceViewer(Gtk.DrawingArea, Observable):
                 unhl.append((newend, oldend))
             elif oldend < newend:
                 hl.append((oldend, newend))
-
         # Draw the newly unhighlighted regions.
         for coords in unhl:
             start = coords[0]
@@ -403,7 +401,7 @@ class ConsensusSequenceViewer(Gtk.DrawingArea, Observable):
         if self.curr_cursor != cursor:
             self.get_window().set_cursor(cursor)
             self.curr_cursor = cursor
-        
+
     def redrawAlignmentPos(self, index):
         """
         Redraws a position in the alignment display, typically for the purpose
@@ -456,7 +454,7 @@ class ConsensusSequenceViewer(Gtk.DrawingArea, Observable):
             settings.getForwardPrimer() != '' and
             settings.getReversePrimer() != ''
         )
-        
+
         totalheight = self.fheight*(self.numseqs+1) + self.margins*2 + self.padding
         if haveprimers:
             totalheight += self.fheight
@@ -498,7 +496,7 @@ class ConsensusSequenceViewer(Gtk.DrawingArea, Observable):
         alend = self.fheight*self.numseqs + self.al_top
         x = start*self.fwidth
         dwidth = (end - start + 1) * self.fwidth
-        self.queue_draw_area(x, alend+self.padding, dwidth, self.fheight)        
+        self.queue_draw_area(x, alend+self.padding, dwidth, self.fheight)
 
     def onDraw(self, da, cr):
         clipr = cr.clip_extents()

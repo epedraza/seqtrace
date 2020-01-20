@@ -90,7 +90,7 @@ class TraceFileInfoWin(Gtk.Window):
 
         self.vbox.show_all()
         self.show()
-    
+
     def makeInfoLabel(self, seqtr):
         labelstr = ''
 
@@ -109,7 +109,7 @@ class TraceFileInfoWin(Gtk.Window):
 
         # remove the extra '\n' at the end of the label string
         labelstr = labelstr[:-1]
-            
+
         label = Gtk.Label()
         label.set_alignment(0, 0)
         label.set_padding(12, 8)
@@ -171,6 +171,7 @@ class TraceWindow(Gtk.Window, CommonDialogs, Observable):
             <menuitem action="Delete" />
             <menuitem action="Modify" />
             <separator />
+            <menuitem action="Search" />
             <menuitem action="Recalc_Consens" />
         </menu>
         <menu action="View">
@@ -198,6 +199,7 @@ class TraceWindow(Gtk.Window, CommonDialogs, Observable):
             <toolitem action="Copy" />
             <toolitem action="Delete" />
             <toolitem action="Modify" />
+            <toolitem action="Search" />
         </toolbar>'''
 
         # These actions are (usually) always enabled.
@@ -240,7 +242,10 @@ class TraceWindow(Gtk.Window, CommonDialogs, Observable):
         self.sel_edit_ag.add_actions([
             ('Copy', Gtk.STOCK_COPY, '_Copy selected base(s)', '<ctl>c', 'Copy the selected base(s) to the system clipboard', self.copyConsBases),
             ('Delete', Gtk.STOCK_DELETE, '_Delete selected base(s)', 'Delete', 'Delete the selected base(s) from the edited sequence', self.deleteConsBases),
-            ('Modify', Gtk.STOCK_EDIT, '_Modify selected base(s)...', None, 'Edit the selected base(s)', self.editConsBases)
+            ('Modify', Gtk.STOCK_EDIT, '_Modify selected base(s)...', None,
+                'Edit the selected base(s)', self.editConsBases),
+            ('Search', Gtk.STOCK_FIND, '_Search for an pattern', None,
+                'Edit the selected base(s)', self.searchBases)
         ])
 
         self.uim = Gtk.UIManager()
@@ -326,7 +331,7 @@ class TraceWindow(Gtk.Window, CommonDialogs, Observable):
 
     def setSaveEnabled(self, state):
         self.main_ag.get_action('Save_Consens').set_sensitive(state)
-        
+
     def registerObserver(self, event_name, handler):
         """
         Extends the registerObserver() method in Observable to allow GUI
@@ -508,6 +513,46 @@ class TraceWindow(Gtk.Window, CommonDialogs, Observable):
         sel = csv.getSelection()
         self.cons.deleteBases(sel[0], sel[1])
         self.setSaveEnabled(True)
+
+    def searchBases(self, widget):
+        diag = EntryDialog(
+            self, "Search for a pattern",
+            'Patter for search', '', 20)
+        pattern = False
+        while not(pattern):
+            response = diag.run()
+            if (response == Gtk.ResponseType.CANCEL) or (response == Gtk.ResponseType.DELETE_EVENT):
+                break
+
+            pattern = diag.get_text().upper()
+        diag.destroy()
+        viewer = self.consview.getConsensusSequenceViewer()
+        oldstart, oldend = viewer.getSelection()
+        try:
+            newstart = self.cons.consensus.index(pattern)
+        except ValueError:
+            newstart = -1
+        print("found {0} at position {1}".format(pattern, newstart))
+        if newstart == -1:
+            return
+        viewer.updateConsSelection(newstart, True)
+        for i in range(0, len(pattern)+1):
+            viewer.updateConsSelection(newstart+i, False)
+        viewer.selecting_active = False
+        self.moveToPosition(viewer, newstart)
+
+    def moveToPosition(self, viewer, position):
+        index1 = viewer.cons.getActualSeqIndex(0, position)
+        if viewer.numseqs == 2:
+            index2 = viewer.cons.getActualSeqIndex(1, position)
+        else:
+            index2 = -1
+        if (viewer.highlighted != -1) and (viewer.highlighted != position):
+            viewer.redrawAlignmentPos(viewer.highlighted)
+        viewer.highlighted = position
+        viewer.notifyObservers(
+            'alignment_clicked', (1, index1, index2)
+        )
 
     def editConsBases(self, widget):
         csv = self.consview.getConsensusSequenceViewer()
