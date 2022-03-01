@@ -234,7 +234,10 @@ class TraceWindow(Gtk.Window, CommonDialogs, Observable):
         self.edit_ag = Gtk.ActionGroup('edite_actions')
         self.edit_ag.add_actions([
             ('Undo', Gtk.STOCK_UNDO, '_Undo', '<ctl>z', 'Undo the last change to the edited sequence', self.undoConsChange),
-            ('Redo', Gtk.STOCK_REDO, '_Redo', '<ctl>y', 'Redo the last change to the edited sequence', self.redoConsChange)
+            ('Redo', Gtk.STOCK_REDO, '_Redo', '<ctl>y',
+                'Redo the last change to the edited sequence', self.redoConsChange),
+            ('Search', Gtk.STOCK_FIND, '_Search for an pattern', None,
+                'Edit the selected base(s)', self.searchBases)
         ])
 
         # These actions are only enabled when there is an active selection.
@@ -243,9 +246,7 @@ class TraceWindow(Gtk.Window, CommonDialogs, Observable):
             ('Copy', Gtk.STOCK_COPY, '_Copy selected base(s)', '<ctl>c', 'Copy the selected base(s) to the system clipboard', self.copyConsBases),
             ('Delete', Gtk.STOCK_DELETE, '_Delete selected base(s)', 'Delete', 'Delete the selected base(s) from the edited sequence', self.deleteConsBases),
             ('Modify', Gtk.STOCK_EDIT, '_Modify selected base(s)...', None,
-                'Edit the selected base(s)', self.editConsBases),
-            ('Search', Gtk.STOCK_FIND, '_Search for an pattern', None,
-                'Edit the selected base(s)', self.searchBases)
+                'Edit the selected base(s)', self.editConsBases)
         ])
 
         self.uim = Gtk.UIManager()
