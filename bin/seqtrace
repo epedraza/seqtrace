@@ -5,7 +5,7 @@ SEQTRACEPATH="../src/run_seqtrace.py"
 
 # The location of Python 2.7.  If no location is set, we assume that "python"
 # is in the user's PATH somewhere.
-PYTHONPATH=
+PYTHONPATH="python3"
 
 
 # Get the location of this launch script.  If the script was not run from a
@@ -40,7 +40,7 @@ fi
 
 # Make sure we have Python 2.7.
 PYTHONVER=$(${PYTHONPATH} -V 2>&1)
-if [[ ${PYTHONVER} != *"2.7"* ]]; then
+if [[ ${PYTHONVER} != *"3.10"* ]]; then
     echo "ERROR: SeqTrace requires Python 2.7, you are trying to use ${PYTHONVER}." >&2
     echo "Please make sure Python 2.7 is available to run SeqTrace." >&2
     exit 1

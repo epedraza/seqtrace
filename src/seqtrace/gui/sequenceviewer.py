@@ -23,7 +23,7 @@ from gi.repository import Pango
 from gi.repository import PangoCairo
 
 from seqtrace.core.observable import Observable
-from colorfuncs import parseHTMLColorStr, getInverseColor
+from .colorfuncs import parseHTMLColorStr, getInverseColor
 from seqtrace.gui import getDefaultFont
 
 
@@ -221,7 +221,6 @@ class ConsensusSequenceViewer(Gtk.DrawingArea, Observable):
                 else:
                     # on the right
                     sel_index = bindex + 1
-
                 self.updateConsSelection(sel_index, True)
 
         elif event.button == 3:
@@ -245,7 +244,7 @@ class ConsensusSequenceViewer(Gtk.DrawingArea, Observable):
             return
 
     def mouseMove(self, da, event):
-        index = int(event.x) / self.fwidth
+        index = int(event.x / self.fwidth)
 
         if self.selecting_active:
             # We are in the process of selecting bases from the consensus
@@ -258,7 +257,6 @@ class ConsensusSequenceViewer(Gtk.DrawingArea, Observable):
             else:
                 # on the right
                 s_index = index + 1
-
             self.updateConsSelection(s_index, False)
             #print 'AFTER start, end, index:', self.consselect_start, self.consselect_end, index
 

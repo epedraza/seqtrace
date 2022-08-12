@@ -25,5 +25,5 @@ try:
     from calign import PairwiseAlignment
 except ImportError:
     # If that fails, load the Python module.
-    from pyalign import PairwiseAlignment
+    from .pyalign import PairwiseAlignment
 

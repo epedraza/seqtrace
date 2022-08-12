@@ -50,11 +50,11 @@ class SequenceTraceFactory:
         tf.close()
         #print magicval
     
-        if magicval[0:4] == 'ABIF':
+        if magicval[0:4] == b'ABIF':
             return ST_ABI
-        elif magicval == '\256ZTR\r\n\032\n':
+        elif magicval == b'\256ZTR\r\n\032\n':
             return ST_ZTR
-        elif magicval[0:4] == '.scf':
+        elif magicval[0:4] == b'.scf':
             return ST_SCF
         else:
             return ST_UNKNOWN
@@ -65,7 +65,7 @@ class SequenceTraceFactory:
             ftype = SequenceTraceFactory.getTraceFileType(filepath)
         except:
             raise
-
+        
         if ftype == ST_ZTR:
             seqt = ZTRSequenceTrace()
         elif ftype == ST_ABI:
@@ -95,7 +95,7 @@ def reverseCompSequence(sequence):
     codes.  This method fully supports all of the IUPAC ambiguity codes.
     """
     tmp = list()
-    for cnt in reversed(range(len(sequence))):
+    for cnt in reversed(list(range(len(sequence)))):
         tmp.append(rclookup[sequence[cnt]])
 
     return ''.join(tmp)
@@ -192,10 +192,8 @@ class SequenceTrace:
         # immediately before, sampnum.
         minv = 0
         maxv = len(self.basepos) - 1
-
         while maxv > (minv + 1):
-            test = (maxv-minv)/2 + minv
-            #print 'minv, maxv, test:', minv, maxv, test
+            test = int((maxv-minv)/2) + minv
             if self.basepos[test] == sampnum:
                 return test
             elif self.basepos[test] > sampnum:
@@ -217,7 +215,7 @@ class SequenceTrace:
         maxv = len(self.basepos) - 1
 
         while maxv > (minv+1):
-            test = (maxv-minv)/2 + minv
+            test = int((maxv-minv)/2) + minv
             #print 'minv, maxv, test:', minv, maxv, test
             if self.basepos[test] == sampnum:
                 return test
@@ -404,7 +402,7 @@ class ZTRSequenceTrace(SequenceTrace):
         udata = list()
         prev = unpack('B', cdata[256])[0]
         udata.append(cdata[256])
-        for cnt in xrange(257, len(cdata)):
+        for cnt in range(257, len(cdata)):
             diff = unpack('b', cdata[cnt])[0]
             actual = table[prev] - diff
 
@@ -463,14 +461,14 @@ class ZTRSequenceTrace(SequenceTrace):
     
         # first, unpack the 1-byte values
         udata = list()
-        for cnt in xrange(1, len(cdata)):
+        for cnt in range(1, len(cdata)):
             val = unpack('B', cdata[cnt])[0]
             udata.append(val)
 
         # now apply the reverse delta filtering
         for clev in range(levels):
             prev = 0
-            for cnt in xrange(0, len(udata)):
+            for cnt in range(0, len(udata)):
                 actual = udata[cnt] + prev
                 if actual > 255:
                     # simulate 1-byte integer overflow
@@ -491,14 +489,14 @@ class ZTRSequenceTrace(SequenceTrace):
     
         # first, unpack the 2-byte values
         udata = list()
-        for cnt in xrange(1, len(cdata), 2):
+        for cnt in range(1, len(cdata), 2):
             val = unpack('>H', cdata[cnt:cnt+2])[0]
             udata.append(val)
 
         # now apply the reverse delta filtering
         for clev in range(levels):
             prev = 0
-            for cnt in xrange(0, len(udata)):
+            for cnt in range(0, len(udata)):
                 actual = udata[cnt] + prev
                 if actual > 65535:
                     # simulate 2-byte integer overflow
@@ -519,14 +517,14 @@ class ZTRSequenceTrace(SequenceTrace):
     
         # first, unpack the 4-byte values (skipping the 2 padding bytes)
         udata = list()
-        for cnt in xrange(3, len(cdata), 4):
+        for cnt in range(3, len(cdata), 4):
             val = unpack('>I', cdata[cnt:cnt+4])[0]
             udata.append(val)
 
         # now apply the reverse delta filtering
         for clev in range(levels):
             prev = 0
-            for cnt in xrange(0, len(udata)):
+            for cnt in range(0, len(udata)):
                 actual = udata[cnt] + prev
                 if actual > 4294967295:
                     # simulate 1-byte integer overflow
@@ -650,7 +648,7 @@ class ABISequenceTrace(SequenceTrace):
         # read the ABI magic number
         abinum = self.tf.read(4)
         #print abinum
-        if abinum != 'ABIF':
+        if abinum != b'ABIF':
             raise ABIError('The ABI file header is invalid.  The file appears to be damaged.')
 
         # check the major version number
@@ -658,8 +656,7 @@ class ABISequenceTrace(SequenceTrace):
             version = unpack('>H', self.tf.read(2))[0]
         except struct.error:
             raise ABIError('The ABI file header is invalid.  The file appears to be damaged.')
-        #print version
-        if (version / 100) != 1:
+        if int(version / 100) != 1:
             raise ABIVersionError(version / 100, version % 100)
         
         # skip the next 10 bytes
@@ -708,15 +705,16 @@ class ABISequenceTrace(SequenceTrace):
     def printABIIndex(self, data_id):
         for entry in self.abiindex:
             if entry['did'] == data_id:
-                print 'entry ID:', entry['did']
-                print 'idv:', entry['idv']
-                print 'data format:', entry['dformat']
-                print 'format size:', entry['fsize']
-                print 'data count:', entry['dcnt']
-                print 'total data length:', entry['dlen']
-                print 'data offset:', entry['offset']
+                print('entry ID:', entry['did'])
+                print('idv:', entry['idv'])
+                print('data format:', entry['dformat'])
+                print('format size:', entry['fsize'])
+                print('data count:', entry['dcnt'])
+                print('total data length:', entry['dlen'])
+                print('data offset:', entry['offset'])
 
     def getIndexEntry(self, data_id, number):
+        data_id = data_id.encode() # str to binary
         for row in self.abiindex:
             if (row['did'] == data_id) and (row['idv'] == number):
                 return row
@@ -725,7 +723,7 @@ class ABISequenceTrace(SequenceTrace):
     
     def getIndexEntriesById(self, data_id):
         entries = list()
-    
+        data_id = data_id.encode()
         for row in self.abiindex:
             if row['did'] == data_id:
                 entries.append(row)
@@ -1049,8 +1047,8 @@ class ABISequenceTrace(SequenceTrace):
             raise ABIError('No base call data were found in the ABI file.  The file might be damaged.')
 
         # read the base calls from the file
-        self.basecalls = self.readString(row).upper()
-    
+        self.basecalls = self.readString(row).decode().upper()
+
     def readConfScores(self):
         """
         There is an inconsistency in the ABIF file format documentation
@@ -1455,5 +1453,5 @@ if __name__ == '__main__':
     st = ABISequenceTrace()
     st.loadFile('forward.ab1')
 
-    for key, value in sorted(st.getComments().iteritems()):
-        print key + ': ' + value
+    for key, value in sorted(st.getComments().items()):
+        print(key + ': ' + value)

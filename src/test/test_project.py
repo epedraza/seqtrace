@@ -106,11 +106,11 @@ class TestProject(unittest.TestCase):
         self.proj.setRevTraceSearchStr('rev')
 
         miter = self.proj.getFwdRevMatchIter()
-        match = miter.next()
+        match = next(miter)
         self.assertEqual(match[2], '1.ztr')
-        match = miter.next()
+        match = next(miter)
         self.assertEqual(match[2], '2.ztr')
-        self.assertRaises(StopIteration, miter.next)
+        self.assertRaises(StopIteration, miter.__next__)
 
         # now test some trickier matches
         self.proj.clearProject()
@@ -135,12 +135,12 @@ class TestProject(unittest.TestCase):
 
         miter = self.proj.getFwdRevMatchIter()
         for names in pairs:
-            match = miter.next()
+            match = next(miter)
             self.assertEqual(match[0].getName(), names[0])
             self.assertEqual(match[1].getName(), names[1])
             self.assertEqual(match[2], names[2])
 
-        self.assertRaises(StopIteration, miter.next)
+        self.assertRaises(StopIteration, miter.__next__)
 
         # Swap forward and reverse search strings and test if all matches are
         # still found.
@@ -148,13 +148,13 @@ class TestProject(unittest.TestCase):
         self.proj.setRevTraceSearchStr('F_')
         miter = self.proj.getFwdRevMatchIter()
         for names in pairs:
-            match = miter.next()
+            match = next(miter)
             # the forward and reverse names will be swapped
             self.assertEqual(match[0].getName(), names[1])
             self.assertEqual(match[1].getName(), names[0])
             self.assertEqual(match[2], names[2])
 
-        self.assertRaises(StopIteration, miter.next)
+        self.assertRaises(StopIteration, miter.__next__)
 
     def test_associateItems(self):
         self.proj.addFiles(self.tracefiles)

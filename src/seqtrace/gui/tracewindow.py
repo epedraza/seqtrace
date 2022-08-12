@@ -102,7 +102,7 @@ class TraceFileInfoWin(Gtk.Window):
                 labelstr += ('<b>{0}:</b>  {1}\n').format(self.getKeyDesc(key), comments[key])
 
         # get any remaining comments
-        for key, value in sorted(comments.iteritems()):
+        for key, value in sorted(comments.items()):
             value = xml.sax.saxutils.escape(value)
             if key not in self.disp_order:
                 labelstr += ('<b>{0}:</b>  {1}\n').format(self.getKeyDesc(key), value)
@@ -533,7 +533,7 @@ class TraceWindow(Gtk.Window, CommonDialogs, Observable):
             newstart = self.cons.consensus.index(pattern)
         except ValueError:
             newstart = -1
-        print("found {0} at position {1}".format(pattern, newstart))
+        print(("found {0} at position {1}".format(pattern, newstart)))
         if newstart == -1:
             return
         viewer.updateConsSelection(newstart, True)

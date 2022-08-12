@@ -50,10 +50,10 @@ args = argp.parse_args()
 
 for module_name in args.module_name:
     if module_name not in test_modules:
-        print ('\nERROR: The name "{0}" is not a valid test module name.  Valid '
+        print(('\nERROR: The name "{0}" is not a valid test module name.  Valid '
         'module names are:\n{1}.\n'.format(
             module_name, '"' + '"\n"'.join(sorted(test_modules)) + '"'
-        ))
+        )))
         sys.exit(1)
 
 # Implements a very simple test runner for all test modules.  This could
@@ -88,9 +88,9 @@ for test_module in mods_to_run:
 
 if successful:
     if total != 1:
-        print '\n\n{0} tests were run.  All tests completed successfully.\n'.format(total)
+        print('\n\n{0} tests were run.  All tests completed successfully.\n'.format(total))
     else:
-        print '\n\n1 test was run.  All tests completed successfully.\n'
+        print('\n\n1 test was run.  All tests completed successfully.\n')
 else:
     if total != 1:
         msgstr = '\n\nFAILED:  {0} tests were run, resulting in '.format(total)
@@ -99,8 +99,8 @@ else:
         else:
             msgstr += '{0} test failures or unexpected exceptions.'.format(failed)
         
-        print msgstr + '  See output above for details.\n'
+        print(msgstr + '  See output above for details.\n')
     else:
-        print ('\n\nFAILED:  1 test was run.  The test was unsuccessful.  See '
-            + 'output above for details.\n')
+        print(('\n\nFAILED:  1 test was run.  The test was unsuccessful.  See '
+            + 'output above for details.\n'))
 

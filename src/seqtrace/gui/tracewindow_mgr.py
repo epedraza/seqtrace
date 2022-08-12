@@ -37,7 +37,7 @@ class TraceWindowManager:
         return newwin
 
     def findByItemId(self, rowid):
-        for tw_id in self.tracewindows.keys():
+        for tw_id in list(self.tracewindows.keys()):
             if self.tracewindows[tw_id][1] == rowid:
                 return self.tracewindows[tw_id][0]
 
@@ -56,14 +56,14 @@ class TraceWindowManager:
 
     def closeProjectTraceWindows(self):
         # close all project-related trace windows that are still open
-        idnums = self.tracewindows.keys()
+        idnums = list(self.tracewindows.keys())
         for idnum in idnums:
             if self.tracewindows[idnum][1] != -1:
                 self.tracewindows[idnum][0].destroy()
 
     def closeAllTraceWindows(self):
         # close any trace windows that are still open
-        idnums = self.tracewindows.keys()
+        idnums = list(self.tracewindows.keys())
         for idnum in idnums:
             self.tracewindows[idnum][0].destroy()
 

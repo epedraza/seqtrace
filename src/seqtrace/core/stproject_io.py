@@ -63,7 +63,7 @@ class SeqTraceProjWriter:
 
     def write(self, filename):
         try:
-            fout = open(filename, 'w')
+            fout = open(filename, 'wb')
         except:
             raise
 
@@ -84,7 +84,7 @@ class FileFormatVersionError(ReaderError):
 class SeqTraceProjReader:
     def readFile(self, filename):
         try:
-            fin = open(filename, 'r')
+            fin = open(filename, 'rb')
         except:
             raise
 
@@ -170,7 +170,7 @@ class SeqTraceProjReader:
         self.iter_index = 0
         return self
 
-    def next(self):
+    def __next__(self):
         if self.iter_index < len(self.proj_data['items']):
             self.iter_index += 1
             item = ProjectItemData()

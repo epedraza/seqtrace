@@ -19,7 +19,7 @@ gi.require_version('Gtk', '3.0')
 gi.require_version('PangoCairo', '1.0')
 from gi.repository import Gtk
 
-from sequenceviewer import ConsensusSequenceViewer
+from .sequenceviewer import ConsensusSequenceViewer
 
 
 class _CSVRescrollData:

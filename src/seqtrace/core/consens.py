@@ -16,7 +16,7 @@
 
 from seqtrace.core.align import PairwiseAlignment
 import seqtrace.core.sequencetrace as sequencetrace
-from observable import Observable
+from .observable import Observable
 
 import math
 import re
@@ -299,7 +299,7 @@ class ConsensSeqBuilder:
             self.seqindexes[0], self.seqindexes[1] = align.getAlignedSeqIndexes()
         else:
             self.alignedseqs[0] = self.seqtraces[0].getBaseCalls()
-            self.seqindexes[0] = range(0, len(self.alignedseqs[0]))
+            self.seqindexes[0] = list(range(0, len(self.alignedseqs[0])))
 
         # If we have primers, align them to the alignment or single sequence.
         haveprimers = (self.settings.getForwardPrimer() != '' and self.settings.getReversePrimer() != '')
@@ -591,7 +591,6 @@ class ConsensSeqBuilder:
 
             cons.append(cbase)
             consconf.append(cscore)
-
         self.consensus = ''.join(cons)
         self.consconf = consconf
 

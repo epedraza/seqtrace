@@ -37,13 +37,13 @@ class TestPairwiseAlignment(unittest.TestCase):
         self.align = align.PairwiseAlignment()
 
     def test_init(self):
-        self.assertEquals(self.align.getSequences(), ('', ''))
-        self.assertEquals(self.align.getAlignedSequences(), ('', ''))
-        self.assertEquals(self.align.getAlignedSeqIndexes(), ([], []))
+        self.assertEqual(self.align.getSequences(), ('', ''))
+        self.assertEqual(self.align.getAlignedSequences(), ('', ''))
+        self.assertEqual(self.align.getAlignedSeqIndexes(), ([], []))
 
         self.align.doAlignment()
-        self.assertEquals(self.align.getAlignedSequences(), ('', ''))
-        self.assertEquals(self.align.getAlignedSeqIndexes(), ([], []))
+        self.assertEqual(self.align.getAlignedSequences(), ('', ''))
+        self.assertEqual(self.align.getAlignedSeqIndexes(), ([], []))
 
     def test_scoringMatrix(self):
         """
@@ -158,8 +158,8 @@ class TestPairwiseAlignment(unittest.TestCase):
                 self.align.doAlignment()
                 #print self.align.getAlignedSequences()[0]
                 #print self.align.getAlignedSequences()[1]
-                self.assertEquals(self.align.getAlignedSequences(), (case[alignedseq1], case[alignedseq2]))
-                self.assertEquals(self.align.getAlignmentScore(), case[score])
+                self.assertEqual(self.align.getAlignedSequences(), (case[alignedseq1], case[alignedseq2]))
+                self.assertEqual(self.align.getAlignmentScore(), case[score])
 
         # Now run a few tests with different gap penalties.
         # CATGCATCC--ATTATAAGGTT
@@ -167,8 +167,8 @@ class TestPairwiseAlignment(unittest.TestCase):
         self.align.setGapPenalty(0)
         self.align.setSequences('CATGCATCCATTATAAGGTT', 'CATGCATTTATTATAAGG')
         self.align.doAlignment()
-        self.assertEquals(self.align.getAlignedSequences(), ('CATGCATCC--ATTATAAGGTT', 'CATGCAT--TTATTATAAGG--'))
-        self.assertEquals(self.align.getAlignmentScore(), 96)
+        self.assertEqual(self.align.getAlignedSequences(), ('CATGCATCC--ATTATAAGGTT', 'CATGCAT--TTATTATAAGG--'))
+        self.assertEqual(self.align.getAlignmentScore(), 96)
 
         # Different sequences with the same gap penalty.
         # CAT--ATCC--ATTATAAGGTT
@@ -176,8 +176,8 @@ class TestPairwiseAlignment(unittest.TestCase):
         self.align.setGapPenalty(0)
         self.align.setSequences('CATATCCATTATAAGGTT', 'CATGCATTTATTATAAGG')
         self.align.doAlignment()
-        self.assertEquals(self.align.getAlignedSequences(), ('CAT--ATCC--ATTATAAGGTT', 'CATGCAT--TTATTATAAGG--'))
-        self.assertEquals(self.align.getAlignmentScore(), 84)
+        self.assertEqual(self.align.getAlignedSequences(), ('CAT--ATCC--ATTATAAGGTT', 'CATGCAT--TTATTATAAGG--'))
+        self.assertEqual(self.align.getAlignmentScore(), 84)
 
         # Using the sequences in the previous tests, test an extreme gap penalty.
         # --CATATCCATTATAAGGTT
@@ -185,8 +185,8 @@ class TestPairwiseAlignment(unittest.TestCase):
         self.align.setGapPenalty(-36)
         self.align.setSequences('CATATCCATTATAAGGTT', 'CATGCATTTATTATAAGG')
         self.align.doAlignment()
-        self.assertEquals(self.align.getAlignedSequences(), ('--CATATCCATTATAAGGTT', 'CATGCATTTATTATAAGG--'))
-        self.assertEquals(self.align.getAlignmentScore(), 36)
+        self.assertEqual(self.align.getAlignedSequences(), ('--CATATCCATTATAAGGTT', 'CATGCATTTATTATAAGG--'))
+        self.assertEqual(self.align.getAlignmentScore(), 36)
 
     def test_getAlignedSeqIndexes(self):
         # sequences of the same length with 2 mismatched bases and 2 missing bases in the middle,
@@ -195,9 +195,9 @@ class TestPairwiseAlignment(unittest.TestCase):
         self.align.setSequences('CATATCCATTATAAGGTT', 'CATGCATTTATTATAAGG')
         self.align.doAlignment()
         #print self.align.getAlignedSeqIndexes()[1]
-        self.assertEquals(self.align.getAlignedSeqIndexes()[0],
+        self.assertEqual(self.align.getAlignedSeqIndexes()[0],
                 [0, 1, 2, -4, -4, 3, 4, 5, 6, -8, -8, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17])
-        self.assertEquals(self.align.getAlignedSeqIndexes()[1],
+        self.assertEqual(self.align.getAlignedSeqIndexes()[1],
                 [0, 1, 2, 3, 4, 5, 6, -8, -8, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, -19, -19])
 
 

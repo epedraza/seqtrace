@@ -279,7 +279,7 @@ class SeqWriterFileDialog(Gtk.FileChooserDialog):
         self.show_options = False
 
         # Add file filters for the supported sequence formats.
-        for name, details in self.formats.items():
+        for name, details in list(self.formats.items()):
             ff = Gtk.FileFilter()
             ff.set_name(name)
             ff.add_pattern('*' + details[1])

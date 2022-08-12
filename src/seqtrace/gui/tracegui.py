@@ -22,7 +22,7 @@ from gi.repository import Gdk
 import cairo
 from gi.repository import Pango, PangoCairo
 
-from colorfuncs import parseHTMLColorStr, colorFromHSV
+from .colorfuncs import parseHTMLColorStr, colorFromHSV
 from seqtrace.gui import getDefaultFont
 
 
@@ -211,7 +211,7 @@ class SequenceTraceViewer:
         cr.set_line_width(1)
 
         samps = self.seqt.getTraceLength()
-        startsamp = int(startx * samps) / width
+        startsamp = int(int(startx * samps) / width)
         endsamp = int((float(startx+dwidth) * samps) / width + 0.5)
         if endsamp < (samps-1):
             endsamp += 2
@@ -269,7 +269,7 @@ class SequenceTraceViewer:
         conf_hue_worst = 1.0
 
         samps = self.seqt.getTraceLength()
-        startsamp = int(startx * samps) / width
+        startsamp = int(startx * samps / width)
         endsamp = int((float(startx+dwidth) * samps) / width + 0.5)
         if endsamp < (samps-1):
             endsamp += 2

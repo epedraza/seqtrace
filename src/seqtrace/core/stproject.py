@@ -186,7 +186,7 @@ class ProjectIter:
     def __len__(self):
         return self.length
 
-    def next(self):
+    def __next__(self):
         if self.tsiter != None:
             item = self.project.getItemByTsiter(self.tsiter)
             self.tsiter = self.ts.iter_next(self.tsiter)
@@ -562,7 +562,7 @@ class SequenceTraceProject(Observable):
             if parent.isValid():
                 child = self.ts.iter_children(parent.getTsiter())
                 if child != None:
-                    data = self.ts.get(child, *range(self.numcols))
+                    data = self.ts.get(child, *list(range(self.numcols)))
                     self.ts.remove(child)
                     self.ts.insert_before(None, parent.getTsiter(), data)
                 self.ts.remove(parent.getTsiter())
@@ -571,7 +571,7 @@ class SequenceTraceProject(Observable):
         self.notifyObservers('files_removed', ())
 
     def moveRowToParent(self, row, parent):
-        data = self.ts.get(row, *range(self.numcols))
+        data = self.ts.get(row, *list(range(self.numcols)))
         self.ts.remove(row)
         self.ts.append(parent, data)
 
@@ -603,7 +603,7 @@ class FwdRevMatchIter:
         return self
 
     # returns a 3-tuple containing one matching pair plus their shared name: (forward file, reverse file, shared name)
-    def next(self):
+    def __next__(self):
         while len(self.items) > 1:
             item1 = self.items.pop()
             item2 = None

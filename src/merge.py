@@ -15,7 +15,7 @@ def merge_projects(argv):
         if index == 0:
             settings = project.getConsensSeqSettings()
             outproject.setConsensSeqSettings(settings)
-        for key, value in project.proj_data['properties'].items():
+        for key, value in list(project.proj_data['properties'].items()):
             outproject.addProperty(key, value)
         index += 1
         for item in project:

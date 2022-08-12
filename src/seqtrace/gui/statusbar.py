@@ -43,7 +43,7 @@ class GenericStatusBar(Gtk.Frame):
 
         # Set up a custom CSS provider for drawing the status bar borders.
         self.css_provider = Gtk.CssProvider()
-        self.css_provider.load_from_data("""
+        self.css_provider.load_from_data(b"""
             GtkFrame.main {
                 border-style: solid;
                 border-width: 1px 0 0 0;
